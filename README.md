@@ -2,7 +2,6 @@
 My Hello World project on Taqtile with TypeScript and React Native. 
 
 ## Environment and tools *
-
 - "expo": "~51.0.28"
 - "react: "18.2.0",
 - "react-dom": "18.2.0",
@@ -11,12 +10,10 @@ My Hello World project on Taqtile with TypeScript and React Native.
 - "node": '20.15.1'
 - "@biomejs/biome": "1.9.4"
 
-### Dev dependencies
-- Biome
-- TypeScript
-
 ## Steps to run and debug *
-To run the app we need to install all dependencies first. This can be done using the following instruction
+To run the app clone this repository.
+
+After, we need to install all dependencies first. This can be done using the following instruction
 
 ```
 npm install
@@ -25,5 +22,16 @@ npm install
 then we can run the app on the terminal with
 
 ```
-npm start
+cd henriqueApp/
+npm run web
+```
+or
+```
+cd henriqueApp/
+npm run android
+```
+or
+```
+cd henriqueApp/
+npm run ios
 ```
