@@ -1,14 +1,14 @@
 import React from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
+import LabeledInput from "..//components/LabeledInput";
+
 
 export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Bem-vindo(a) à Taqtile!</Text>
-      <Text style={styles.label}>E-mail</Text>
-      <TextInput style={styles.input} placeholder="E-mail" keyboardType="email-address" />
-      <Text style={styles.label}>Senha</Text>
-      <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
+      <LabeledInput label="E-mail" keyboardType="email-address" />
+      <LabeledInput label="Senha" secureTextEntry />
       <Button title="Entrar" onPress={() => {}} />
     </View>
   );
