@@ -1,9 +1,15 @@
-import { Stack } from "expo-router";
+import { Text, View } from "react-native";
 
-export default function RootLayout() {
+export default function Home() {
   return (
-    <Stack>
-      <Stack.Screen name="index" />
-    </Stack>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text>Hello World</Text>
+    </View>
   );
 }
