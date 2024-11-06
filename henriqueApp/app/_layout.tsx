@@ -1,8 +1,11 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, Alert } from "react-native";
-import { LabeledInput } from "..//components/LabeledInput";
+import { LabeledInput } from "../components/LabeledInput";
 import useEmailValidation from "../hooks/useEmailValidation";
 import usePasswordValidation from "../hooks/usePasswordValidation";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const API_URL = 'https://template-onboarding-node-sjz6wnaoia-uc.a.run.app/authenticate';
 
 export default function LoginScreen() {
   const {
@@ -19,12 +22,38 @@ export default function LoginScreen() {
     validatePasswordField
   } = usePasswordValidation();
 
-  const handleSubmit = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
     const isEmailValid = validateEmailField();
     const isPasswordValid = validatePasswordField();
 
     if (isEmailValid && isPasswordValid) {
-      Alert.alert("Login bem-sucedido!");
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          await AsyncStorage.setItem('authToken', data.token);          
+        } else {
+          setServerError(data.message || "Erro desconhecido.");
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+        setServerError("Erro de conexão. Tente novamente.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -38,6 +67,7 @@ export default function LoginScreen() {
         onChangeText={setEmail}
       />
       {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+
       <LabeledInput
         label="Senha"
         secureTextEntry
@@ -45,7 +75,10 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
       {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-      <Button title="Entrar" onPress={handleSubmit} />
+
+      {serverError ? <Text style={styles.errorText}>{serverError}</Text> : null}
+
+      <Button title={isLoading ? "Carregando..." : "Entrar"} onPress={handleSubmit} disabled={isLoading} />
     </View>
   );
 }
