@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import LabeledInput from "..//components/LabeledInput";
+import { LabeledInput } from "..//components/LabeledInput";
 
 
 export default function LoginScreen() {

@@ -5,7 +5,7 @@ interface LabeledInputProps extends TextInputProps {
   label: string;
 }
 
-const LabeledInput: React.FC<LabeledInputProps> = ({ label, ...inputProps }) => {
+export const LabeledInput: React.FC<LabeledInputProps> = ({ label, ...inputProps }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LabeledInput;
+
