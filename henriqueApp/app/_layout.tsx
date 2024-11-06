@@ -26,7 +26,6 @@ export default function LoginScreen() {
         onChangeText={setEmail}
       />
       {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
       <LabeledInput
         label="Senha"
         secureTextEntry
