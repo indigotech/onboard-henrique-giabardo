@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useEmailValidation = () => {
+export const useEmailValidation = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -34,5 +34,3 @@ const useEmailValidation = () => {
     validateEmailField,
   };
 };
-
-export default useEmailValidation;

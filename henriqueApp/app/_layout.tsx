@@ -1,61 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, Alert } from "react-native";
+import React from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 import { LabeledInput } from "../components/LabeledInput";
-import useEmailValidation from "../hooks/useEmailValidation";
-import usePasswordValidation from "../hooks/usePasswordValidation";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_URL = 'https://template-onboarding-node-sjz6wnaoia-uc.a.run.app/authenticate';
+import useLogin from "../hooks/useLogin"; // Import the custom hook
 
 export default function LoginScreen() {
   const {
     email,
     setEmail,
     emailError,
-    validateEmailField
-  } = useEmailValidation();
-
-  const {
     password,
     setPassword,
     passwordError,
-    validatePasswordField
-  } = usePasswordValidation();
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
-
-  const handleSubmit = async () => {
-    const isEmailValid = validateEmailField();
-    const isPasswordValid = validatePasswordField();
-
-    if (isEmailValid && isPasswordValid) {
-      setIsLoading(true);
-
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          await AsyncStorage.setItem('authToken', data.token);          
-        } else {
-          setServerError(data.message || "Erro desconhecido.");
-        }
-      } catch (error) {
-        console.error("Login failed:", error);
-        setServerError("Erro de conexão. Tente novamente.");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
+    isLoading,
+    serverError,
+    handleSubmit,
+  } = useLogin(); 
 
   return (
     <View style={styles.container}>
