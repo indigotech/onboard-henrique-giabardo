@@ -1,15 +1,51 @@
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import React, { useState }  from "react";
+import { View, Text, Button, StyleSheet, Alert } from "react-native";
 import { LabeledInput } from "..//components/LabeledInput";
-
+import useEmailValidation from "../hooks/useEmailValidation";
+import usePasswordValidation from "../hooks/usePasswordValidation";
 
 export default function LoginScreen() {
+  const {
+    email,
+    setEmail,
+    emailError,
+    validateEmailField
+  } = useEmailValidation();
+
+  const {
+    password,
+    setPassword,
+    passwordError,
+    validatePasswordField
+  } = usePasswordValidation();
+
+  const handleSubmit = () => {
+    const isEmailValid = validateEmailField();
+    const isPasswordValid = validatePasswordField();
+
+    if (isEmailValid && isPasswordValid) {
+      Alert.alert("Login bem-sucedido!");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Bem-vindo(a) à Taqtile!</Text>
-      <LabeledInput label="E-mail" keyboardType="email-address" />
-      <LabeledInput label="Senha" secureTextEntry />
-      <Button title="Entrar" onPress={() => {}} />
+      <LabeledInput
+        label="E-mail"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+      />
+      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+      <LabeledInput
+        label="Senha"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+      <Button title="Entrar" onPress={handleSubmit} />
     </View>
   );
 }
@@ -26,15 +62,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 15,
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginBottom: 10,
   },
 });
