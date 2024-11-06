@@ -32,9 +32,10 @@ export default function useLogin() {
         const data = await response.json();
 
         if (response.ok) {
-          await AsyncStorage.setItem('authToken', data.token);
+          await AsyncStorage.setItem('authToken', data.data.token);
+          console.log(data.data.token)
         } else {
-          setServerError(data.message || "Erro desconhecido.");
+          setServerError(data.data.message || "Erro desconhecido.");
         }
       } catch (error) {
         console.error("Login failed:", error);
