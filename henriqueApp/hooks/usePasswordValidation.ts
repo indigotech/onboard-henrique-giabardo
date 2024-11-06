@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const usePasswordValidation = () => {
+export const usePasswordValidation = () => {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -36,5 +36,3 @@ const usePasswordValidation = () => {
     validatePasswordField,
   };
 };
-
-export default usePasswordValidation;
