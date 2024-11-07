@@ -35,7 +35,7 @@ export function useLogin() {
           await AsyncStorage.setItem('authToken', data.data.token);
           router.navigate('/details');
         } else {
-          setServerError(data.errors[0].message || "Erro desconhecido.");
+          setServerError(data.errors?.[0]?.message ?? "Erro desconhecido.");
         }
       } catch (error) {
         console.error("Login failed:", error);
