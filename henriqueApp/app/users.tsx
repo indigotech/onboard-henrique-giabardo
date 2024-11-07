@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFetchUsers } from '../hooks/useFetchUsers';
 
-export default function UsersList() {
+export default function UsersListScreen() {
   const { users, loading, error } = useFetchUsers();
 
   const renderItem = ({ item }: { item: { name: string; email: string } }) => (
