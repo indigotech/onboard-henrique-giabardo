@@ -34,7 +34,7 @@ export function useLogin() {
         if (response.ok) {
           await AsyncStorage.setItem('authToken', data.data.token);
         } else {
-          setServerError(data.data.message || "Erro desconhecido.");
+          setServerError(data.errors[0].message || "Erro desconhecido.");
         }
       } catch (error) {
         console.error("Login failed:", error);
