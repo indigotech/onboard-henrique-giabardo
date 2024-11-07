@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useFetchUsers } from '../hooks/useFetchUsers';
 type User = {
   id: number;
   name: string;
   email: string;
 };
+
+export default function UsersListScreen() {
+  const { users, loading, error, page, totalPages, setPage } = useFetchUsers();
 
 const fakeStaticUsers: User[] = [
   { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
@@ -23,12 +26,39 @@ export default function UserListScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registered Users</Text>
-      <FlatList
-        data={fakeStaticUsers}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : (
+        <>
+          <FlatList
+            data={users}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={<Text>No users found</Text>}
+          />
+          <View style={styles.pagination}>
+            <TouchableOpacity
+              style={styles.pageButton}
+              onPress={() => setPage(page > 1 ? page - 1 : 1)}
+              disabled={page === 1}
+            >
+              <Text style={styles.pageButtonText}>Previous</Text>
+            </TouchableOpacity>
+            <Text style={styles.pageNumber}>
+              Page {page} of {totalPages}
+            </Text>
+            <TouchableOpacity
+              style={styles.pageButton}
+              onPress={() => setPage(page < totalPages ? page + 1 : totalPages)}
+              disabled={page === totalPages}
+            >
+              <Text style={styles.pageButtonText}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -64,5 +94,24 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 14,
     color: '#666',
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  pageButton: {
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+  },
+  pageButtonText: {
+    color: '#fff',
+  },
+  pageNumber: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
