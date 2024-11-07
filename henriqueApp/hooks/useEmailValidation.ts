@@ -11,7 +11,7 @@ export const useEmailValidation = () => {
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    setEmailError(""); // Clear error on change
+    setEmailError("");
   };
 
   const validateEmailField = () => {
