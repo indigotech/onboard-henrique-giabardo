@@ -33,7 +33,7 @@ export function useLogin() {
 
         if (response.ok) {
           await AsyncStorage.setItem('authToken', data.data.token);
-          router.navigate('/details');
+          router.navigate('/users');
         } else {
           setServerError(data.errors?.[0]?.message ?? "Erro desconhecido.");
         }
