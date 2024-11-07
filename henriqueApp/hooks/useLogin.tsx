@@ -6,7 +6,7 @@ import {usePasswordValidation} from "./usePasswordValidation";
 
 const API_URL = 'https://template-onboarding-node-sjz6wnaoia-uc.a.run.app/authenticate';
 
-export default function useLogin() {
+export function useLogin() {
   const { email, setEmail, emailError, validateEmailField } = useEmailValidation();
   const { password, setPassword, passwordError, validatePasswordField } = usePasswordValidation();
 
@@ -33,7 +33,6 @@ export default function useLogin() {
 
         if (response.ok) {
           await AsyncStorage.setItem('authToken', data.data.token);
-          console.log(data.data.token)
         } else {
           setServerError(data.data.message || "Erro desconhecido.");
         }

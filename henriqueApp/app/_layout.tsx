@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { LabeledInput } from "../components/LabeledInput";
-import useLogin from "../hooks/useLogin"; // Import the custom hook
+import {useLogin} from "../hooks/useLogin";
 
 export default function LoginScreen() {
   const {
