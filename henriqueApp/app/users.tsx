@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useFetchUsers } from '../hooks/useFetchUsers';
 
 export default function UsersListScreen() {
-  const { users, loading, error } = useFetchUsers();
+  const { users, loading, error, page, totalPages, setPage } = useFetchUsers();
 
   const renderItem = ({ item }: { item: { name: string; email: string } }) => (
     <View style={styles.userItem}>
@@ -19,12 +19,33 @@ export default function UsersListScreen() {
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
-        <FlatList
-          data={users}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text>No users found</Text>}
-        />
+        <>
+          <FlatList
+            data={users}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={<Text>No users found</Text>}
+          />
+          <View style={styles.pagination}>
+            <TouchableOpacity
+              style={styles.pageButton}
+              onPress={() => setPage(page > 1 ? page - 1 : 1)}
+              disabled={page === 1}
+            >
+              <Text style={styles.pageButtonText}>Previous</Text>
+            </TouchableOpacity>
+            <Text style={styles.pageNumber}>
+              Page {page} of {totalPages}
+            </Text>
+            <TouchableOpacity
+              style={styles.pageButton}
+              onPress={() => setPage(page < totalPages ? page + 1 : totalPages)}
+              disabled={page === totalPages}
+            >
+              <Text style={styles.pageButtonText}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </>
       )}
     </View>
   );
@@ -59,5 +80,24 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 14,
     color: '#666',
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  pageButton: {
+    padding: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+  },
+  pageButtonText: {
+    color: '#fff',
+  },
+  pageNumber: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
