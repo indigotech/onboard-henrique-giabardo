@@ -1,19 +1,71 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
 };
 
-const fakeStaticUsers: User[] = [
-  { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
-  { id: 2, name: 'Bob Johnson', email: 'bob@example.com' },
-  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com' },
-];
+const USERS_QUERY = `
+  query {
+    users {
+      nodes {
+        id
+        name
+        email
+      }
+    }
+  }
+`;
 
-export default function UserListScreen() {
+const API_URL = 'https://template-onboarding-node-sjz6wnaoia-uc.a.run.app/graphql';
+
+export default function DetailsScreen() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = await AsyncStorage.getItem('authToken');
+        
+        if (!token) {
+          setError('Authorization token not found');
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+          body: JSON.stringify({ query: USERS_QUERY }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          setUsers(result.data.users.nodes);
+          console.log(response)
+        } else {
+          setError(result.errors?.[0]?.message || 'Failed to fetch users');
+        }
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+        setError("Connection error. Try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   const renderItem = ({ item }: { item: User }) => (
     <View style={styles.userItem}>
       <Text style={styles.userName}>{item.name}</Text>
@@ -23,12 +75,18 @@ export default function UserListScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registered Users</Text>
-      <FlatList
-        data={fakeStaticUsers}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : (
+        <FlatList
+          data={users}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<Text>No users found</Text>}
+        />
+      )}
     </View>
   );
 }
@@ -40,11 +98,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: '#f8f8f8',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  errorText: {
+    color: 'red',
     textAlign: 'center',
-    marginVertical: 20,
   },
   userItem: {
     padding: 15,
