@@ -1,11 +1,18 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
+import { useFetchUsers } from '../hooks/useFetchUsers';
+import { Pagination } from '../components/Pagination';
+import { FAB } from '@rneui/themed';
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
+export default function UsersListScreen() {
+  const { users, loading, error, page, totalPages, setPage } = useFetchUsers();
+  const navigation = useNavigation();
+
+  const handleNavigateToAddUser = () => {
+    router.navigate('/addUser');
+  };
 
 const fakeStaticUsers: User[] = [
   { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
@@ -23,12 +30,22 @@ export default function UserListScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registered Users</Text>
-      <FlatList
-        data={fakeStaticUsers}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : (
+        <>
+          <FlatList
+            data={users}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={<Text>No users found</Text>}
+          />
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
+      )}
+      <FAB title="Add" color="#6200ee" style={styles.fab} onPress={handleNavigateToAddUser} />
     </View>
   );
 }
@@ -64,5 +81,10 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 14,
     color: '#666',
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
   },
 });
