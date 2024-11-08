@@ -1,10 +1,18 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { useFetchUsers } from '../hooks/useFetchUsers';
-import { Pagination }  from '../components/Pagination';
+import { Pagination } from '../components/Pagination';
+import { FAB } from '@rneui/themed';
 
 export default function UsersListScreen() {
   const { users, loading, error, page, totalPages, setPage } = useFetchUsers();
+  const navigation = useNavigation();
+
+  const handleNavigateToAddUser = () => {
+    router.navigate('/addUser');
+  };
 
   const renderItem = ({ item }: { item: { name: string; email: string } }) => (
     <View style={styles.userItem}>
@@ -30,6 +38,7 @@ export default function UsersListScreen() {
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )}
+      <FAB title="Add" color="#6200ee" style={styles.fab} onPress={handleNavigateToAddUser} />
     </View>
   );
 }
@@ -63,5 +72,10 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 14,
     color: '#666',
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
   },
 });
