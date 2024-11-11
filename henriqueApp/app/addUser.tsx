@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, StyleSheet, ScrollView } from 'react-native';
+import { Button, StyleSheet, ScrollView, Alert } from 'react-native';
 import { LabeledInput } from '../components/LabeledInput';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const validationSchema = yup.object({
   name: yup
@@ -24,9 +25,7 @@ const validationSchema = yup.object({
     .test(
       'is-valid-date',
       'Birth date must be a valid date in the format YYYY-MM-DD',
-      (value) => {
-        return dayjs(value, 'YYYY-MM-DD', true).isValid();
-      }
+      (value) => dayjs(value, 'YYYY-MM-DD', true).isValid()
     )
     .test(
       'is-in-range',
@@ -50,6 +49,34 @@ const validationSchema = yup.object({
 });
 
 const AddUserScreen: React.FC = () => {
+  const addUser = async (values: typeof initialValues) => {
+    try {
+      const authToken = await AsyncStorage.getItem('authToken');
+      if (!authToken) {
+        Alert.alert('Error', 'Authorization token not found');
+        return;
+      }
+
+      const response = await fetch('https://template-onboarding-node-sjz6wnaoia-uc.a.run.app/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${authToken}`,
+        },
+        body: JSON.stringify(values),
+      });
+      if (response.ok) {
+        Alert.alert('Success', 'User added successfully');
+      } else {
+        const errorData = await response.json();
+        Alert.alert('Error', errorData.message || 'Failed to add user');
+      }
+    } catch (error) {
+      console.error('Error adding user:', error);
+      Alert.alert('Error', 'An unexpected error occurred');
+    }
+  };
+
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } = useFormik({
     initialValues: {
       name: '',
@@ -60,9 +87,7 @@ const AddUserScreen: React.FC = () => {
       role: '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('User added:', values);
-    },
+    onSubmit: addUser,
   });
 
   return (
