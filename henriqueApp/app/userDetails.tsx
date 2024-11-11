@@ -3,11 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
 export default function UserDetails() {
-  const { name } = useLocalSearchParams();
+  const { id, name, email } = useLocalSearchParams();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.userName}>{name}</Text>
+      <Text style={styles.userDetail}>ID: {id}</Text>
+      <Text style={styles.userDetail}>Name: {name}</Text>
+      <Text style={styles.userDetail}>Email: {email}</Text>
     </View>
   );
 }
@@ -19,8 +21,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f8f8f8',
   },
-  userName: {
-    fontSize: 24,
+  userDetail: {
+    fontSize: 20,
     fontWeight: 'bold',
+    marginVertical: 8,
   },
 });

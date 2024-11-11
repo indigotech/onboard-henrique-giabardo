@@ -19,14 +19,15 @@ export default function UsersListScreen() {
   };
 
   const renderItem = ({ item }: { item: { id: string; name: string; email: string } }) => (
-    <TouchableOpacity 
-      style={styles.userItem} 
-      onPress={() => router.push({ pathname: '/userDetails', params: { name: item.name } })}
+    <TouchableOpacity
+      style={styles.userItem}
+      onPress={() => router.push({ pathname: '/userDetails', params: { id: item.id } })}
     >
       <Text style={styles.userName}>{item.name}</Text>
       <Text style={styles.userEmail}>{item.email}</Text>
     </TouchableOpacity>
   );
+  
   return (
     <View style={styles.container}>
       {loading ? (
