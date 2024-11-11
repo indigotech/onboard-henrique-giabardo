@@ -1,6 +1,7 @@
-import React from 'react';
-import { Button, StyleSheet, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Button, StyleSheet, ScrollView, Alert, Text } from 'react-native';
 import { LabeledInput } from '../components/LabeledInput';
+import { router } from 'expo-router';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
@@ -49,8 +50,11 @@ const validationSchema = yup.object({
 });
 
 const AddUserScreen: React.FC = () => {
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const addUser = async (values: typeof initialValues) => {
     try {
+      setServerError(null);
       const authToken = await AsyncStorage.getItem('authToken');
       if (!authToken) {
         Alert.alert('Error', 'Authorization token not found');
@@ -65,15 +69,16 @@ const AddUserScreen: React.FC = () => {
         },
         body: JSON.stringify(values),
       });
+
       if (response.ok) {
-        Alert.alert('Success', 'User added successfully');
+        router.navigate('/users');
       } else {
         const errorData = await response.json();
-        Alert.alert('Error', errorData.message || 'Failed to add user');
+        setServerError(errorData.errors?.[0]?.message ?? 'Failed to add user');
       }
     } catch (error) {
       console.error('Error adding user:', error);
-      Alert.alert('Error', 'An unexpected error occurred');
+      setServerError('An unexpected error occurred');
     }
   };
 
@@ -92,6 +97,7 @@ const AddUserScreen: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {serverError && <Text style={styles.errorText}>{serverError}</Text>}
       <LabeledInput
         label="Name"
         value={values.name}
@@ -147,6 +153,12 @@ const AddUserScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
