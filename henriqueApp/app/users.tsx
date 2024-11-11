@@ -1,17 +1,22 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
+import { useFetchUsers } from '../hooks/useFetchUsers';
+import { Pagination } from '../components/Pagination';
+import { FAB } from '@rneui/themed';
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
+export default function UsersListScreen() {
+  const { users, loading, error, page, totalPages, setPage, fetchUsers } = useFetchUsers();
 
-const fakeStaticUsers: User[] = [
-  { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
-  { id: 2, name: 'Bob Johnson', email: 'bob@example.com' },
-  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com' },
-];
+  useFocusEffect(
+    useCallback(() => {
+      fetchUsers();
+    }, [fetchUsers])
+  );
+
+  const handleNavigateToAddUser = () => {
+    router.push('/addUser');
+  };
 
 export default function UserListScreen() {
   const renderItem = ({ item }: { item: User }) => (
