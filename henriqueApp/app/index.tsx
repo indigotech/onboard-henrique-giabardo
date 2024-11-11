@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { LabeledInput } from "../components/LabeledInput";
-import {useLogin} from "../hooks/useLogin";
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { LabeledInput } from '../components/LabeledInput';
+import { useLogin } from '../hooks/useLogin';
 
 export default function LoginScreen() {
   const {
@@ -24,16 +24,16 @@ export default function LoginScreen() {
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
+        errorMessage={emailError}
       />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
+      
       <LabeledInput
         label="Senha"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        errorMessage={passwordError}
       />
-      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
       {serverError ? <Text style={styles.errorText}>{serverError}</Text> : null}
 
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
-  },
+  },  
   errorText: {
     color: "red",
     fontSize: 14,
