@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, Text } from 'react-native';
+import { H1 } from '../components/H1'; // Import H1 component
 import { LabeledInput } from '../components/LabeledInput';
 import { CustomButton } from '../components/CustomButton';
 import { useAddUserForm } from '../hooks/useAddUserForm';
@@ -17,7 +18,10 @@ export default function AddUserScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <H1>Criar usuário</H1>
+      
       {serverError && <Text style={styles.errorText}>{serverError}</Text>}
+      
       <LabeledInput
         label="Name"
         value={values.name}
