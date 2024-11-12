@@ -9,8 +9,11 @@ interface LabeledInputProps extends TextInputProps {
 export const LabeledInput: React.FC<LabeledInputProps> = ({ label, errorMessage, ...textInputProps }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput style={[styles.input, errorMessage ? styles.inputError : null]} {...textInputProps} />
+      <Text style={[styles.label, errorMessage ? styles.labelError : null]}>{label}</Text>
+      <TextInput
+        style={[styles.input, errorMessage ? styles.inputError : null]}
+        {...textInputProps}
+      />
       {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
     </View>
   );
@@ -21,13 +24,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 5,
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#777777',
+    marginBottom: 12,
+  },
+  labelError: {
+    color: 'red',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#777777',
     borderRadius: 5,
     padding: 10,
     fontSize: 16,
@@ -36,8 +43,9 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   },
   errorText: {
-    color: 'red',
     fontSize: 12,
-    marginTop: 5,
+    fontWeight: '400',
+    color: 'red',
+    marginTop: 8,
   },
 });

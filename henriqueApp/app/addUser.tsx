@@ -1,14 +1,27 @@
 import React from 'react';
-import { Button, StyleSheet, ScrollView, Text } from 'react-native';
+import { StyleSheet, ScrollView, Text } from 'react-native';
+import { H1 } from '../components/H1';
 import { LabeledInput } from '../components/LabeledInput';
+import { CustomButton } from '../components/CustomButton';
 import { useAddUserForm } from '../hooks/useAddUserForm';
 
-export default function AddUserScreen(){
-  const { handleChange, handleBlur, handleSubmit, values, errors, touched, serverError } = useAddUserForm();
+export default function AddUserScreen() {
+  const {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values,
+    errors,
+    touched,
+    serverError,
+  } = useAddUserForm();
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <H1>Criar usuário</H1>
+      
       {serverError && <Text style={styles.errorText}>{serverError}</Text>}
+      
       <LabeledInput
         label="Name"
         value={values.name}
@@ -56,10 +69,16 @@ export default function AddUserScreen(){
         onBlur={handleBlur('role')}
         errorMessage={touched.role && errors.role ? errors.role : undefined}
       />
-      <Button title="Add User" onPress={() => handleSubmit()} />
+      
+      <CustomButton
+        label="Add User"
+        backgroundColor="#6200ee"
+        textColor="#ffffff"
+        onPress={handleSubmit}
+      />
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

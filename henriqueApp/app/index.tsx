@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LabeledInput } from '../components/LabeledInput';
 import { useLogin } from '../hooks/useLogin';
+import { H1 } from '../components/H1';
+import { CustomButton } from '../components/CustomButton';
 
 export default function LoginScreen() {
   const {
@@ -18,7 +20,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo(a) à Taqtile!</Text>
+      <H1>Bem-vindo(a) à Taqtile!</H1>
       <LabeledInput
         label="E-mail"
         keyboardType="email-address"
@@ -37,7 +39,13 @@ export default function LoginScreen() {
 
       {serverError ? <Text style={styles.errorText}>{serverError}</Text> : null}
 
-      <Button title={isLoading ? "Carregando..." : "Entrar"} onPress={handleSubmit} disabled={isLoading} />
+      <CustomButton
+        label={isLoading ? "Carregando..." : "Entrar"}
+        backgroundColor="#6200ee"
+        textColor="#ffffff"
+        onPress={handleSubmit}
+        loading={isLoading}
+      />
     </View>
   );
 }
