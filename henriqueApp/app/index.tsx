@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LabeledInput } from '../components/LabeledInput';
 import { useLogin } from '../hooks/useLogin';
+import { CustomButton } from '../components/CustomButton';
 
 export default function LoginScreen() {
   const {
@@ -37,7 +38,13 @@ export default function LoginScreen() {
 
       {serverError ? <Text style={styles.errorText}>{serverError}</Text> : null}
 
-      <Button title={isLoading ? "Carregando..." : "Entrar"} onPress={handleSubmit} disabled={isLoading} />
+      <CustomButton
+        label={isLoading ? "Carregando..." : "Entrar"}
+        backgroundColor="#6200ee"
+        textColor="#ffffff"
+        onPress={handleSubmit}
+        loading={isLoading}
+      />
     </View>
   );
 }
