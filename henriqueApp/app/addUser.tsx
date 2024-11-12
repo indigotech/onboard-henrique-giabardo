@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, StyleSheet, ScrollView, Text } from 'react-native';
 import { LabeledInput } from '../components/LabeledInput';
-import useAddUserForm from '../hooks/useAddUserForm';
+import { useAddUserForm } from '../hooks/useAddUserForm';
 
-const AddUserScreen: React.FC = () => {
+export default function AddUserScreen(){
   const { handleChange, handleBlur, handleSubmit, values, errors, touched, serverError } = useAddUserForm();
 
   return (
@@ -72,5 +72,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default AddUserScreen;

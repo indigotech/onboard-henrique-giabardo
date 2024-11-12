@@ -48,7 +48,7 @@ const validationSchema = yup.object({
     .required('Role is required'),
 });
 
-const useAddUserForm = () => {
+export const useAddUserForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const addUser = async (values: typeof initialValues) => {
@@ -99,5 +99,3 @@ const useAddUserForm = () => {
     serverError,
   };
 };
-
-export default useAddUserForm;

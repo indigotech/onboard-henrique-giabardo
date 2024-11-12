@@ -1,13 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type User = {
+interface User {
   id: string;
   name: string;
   email: string;
 };
 
-type UseFetchUsersResult = {
+interface UseFetchUsersResult {
   users: User[];
   loading: boolean;
   error: string | null;
