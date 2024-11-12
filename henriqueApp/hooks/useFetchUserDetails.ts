@@ -1,35 +1,33 @@
 import { useEffect, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface User {
+interface UserDetails {
   id: string;
   name: string;
   email: string;
-};
+  birthDate: string;
+  phone: string;
+  role: string;
+}
 
-interface UseFetchUsersResult {
-  users: User[];
+interface UseFetchUserDetailsResult {
+  userDetails: UserDetails | null;
   loading: boolean;
   error: string | null;
-  page: number;
-  totalPages: number;
-  setPage: (page: number) => void;
-  fetchUsers: () => void;
-};
+  fetchUserDetails: (id: string) => void;
+}
 
 const API_URL = 'https://template-onboarding-node-sjz6wnaoia-uc.a.run.app/users';
 
-export function useFetchUsers(): UseFetchUsersResult {
-  const [users, setUsers] = useState<User[]>([]);
+export function useFetchUserDetails(): UseFetchUserDetailsResult {
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const usersPerPage = 20;
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUserDetails = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
+    setUserDetails(null);
 
     try {
       const token = await AsyncStorage.getItem('authToken');
@@ -39,9 +37,7 @@ export function useFetchUsers(): UseFetchUsersResult {
         return;
       }
 
-      const offset = usersPerPage * (page - 1);
-      const requestUrl = `${API_URL}?offset=${offset}&limit=${usersPerPage}`;
-
+      const requestUrl = `${API_URL}/${id}`;
       const response = await fetch(requestUrl, {
         method: 'GET',
         headers: {
@@ -49,26 +45,20 @@ export function useFetchUsers(): UseFetchUsersResult {
           Authorization: `${token}`,
         },
       });
-
       const result = await response.json();
 
       if (response.ok) {
-        setUsers(result.data?.nodes ?? []);
-        const totalUsers = result.data?.count ?? 0;
-        setTotalPages(Math.ceil(totalUsers / usersPerPage));
+        setUserDetails(result.data);
       } else {
-        setError(result.errors?.[0]?.message ?? 'Failed to fetch users');
+        const errorData = await response.json();
+        setError(result.errors?.[0]?.message ?? 'Failed to fetch user details');
       }
-    } catch (error) {
+    } catch (err) {
       setError('Connection error. Try again.');
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, []);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers, page]);
-
-  return { users, loading, error, page, totalPages, setPage, fetchUsers };
+  return { userDetails, loading, error, fetchUserDetails };
 }

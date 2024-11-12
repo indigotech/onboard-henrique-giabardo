@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useFetchUsers } from '../hooks/useFetchUsers';
 import { Pagination } from '../components/Pagination';
@@ -18,13 +18,16 @@ export default function UsersListScreen() {
     router.push('/addUser');
   };
 
-  const renderItem = ({ item }: { item: { name: string; email: string } }) => (
-    <View style={styles.userItem}>
+  const renderItem = ({ item }: { item: { id: string; name: string; email: string } }) => (
+    <TouchableOpacity
+      style={styles.userItem}
+      onPress={() => router.push({ pathname: '/userDetails', params: { id: item.id } })}
+    >
       <Text style={styles.userName}>{item.name}</Text>
       <Text style={styles.userEmail}>{item.email}</Text>
-    </View>
+    </TouchableOpacity>
   );
-
+  
   return (
     <View style={styles.container}>
       {loading ? (
