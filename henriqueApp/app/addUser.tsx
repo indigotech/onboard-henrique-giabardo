@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, Text } from 'react-native';
-import { H1 } from '../components/H1'; // Import H1 component
+import { H1 } from '../components/H1';
 import { LabeledInput } from '../components/LabeledInput';
 import { CustomButton } from '../components/CustomButton';
 import { useAddUserForm } from '../hooks/useAddUserForm';
