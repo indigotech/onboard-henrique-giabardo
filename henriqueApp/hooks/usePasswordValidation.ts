@@ -13,7 +13,7 @@ export const usePasswordValidation = () => {
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    setPasswordError(""); // Clear error on change
+    setPasswordError("");
   };
 
   const validatePasswordField = () => {

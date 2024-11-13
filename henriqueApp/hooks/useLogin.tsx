@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert } from "react-native";
+import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useEmailValidation} from "./useEmailValidation";
 import {usePasswordValidation} from "./usePasswordValidation";
@@ -33,6 +33,7 @@ export function useLogin() {
 
         if (response.ok) {
           await AsyncStorage.setItem('authToken', data.data.token);
+          router.navigate('/details');
         } else {
           setServerError(data.errors?.[0]?.message ?? "Erro desconhecido.");
         }
