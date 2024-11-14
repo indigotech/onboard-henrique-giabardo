@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFetchUsers } from '../hooks/useFetchUsers';
+import { Pagination }  from '../components/Pagination';
 
 export default function UsersListScreen() {
-  const { users, loading, error } = useFetchUsers();
+  const { users, loading, error, page, totalPages, setPage } = useFetchUsers();
+
 
   const renderItem = ({ item }: { item: { name: string; email: string } }) => (
     <View style={styles.userItem}>
@@ -19,12 +21,17 @@ export default function UsersListScreen() {
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
-        <FlatList
-          data={users}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text>No users found</Text>}
-        />
+
+        <>
+          <FlatList
+            data={users}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={<Text>No users found</Text>}
+          />
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
+
       )}
     </View>
   );
