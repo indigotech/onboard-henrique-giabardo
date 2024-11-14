@@ -6,14 +6,8 @@ import { Pagination }  from '../components/Pagination';
 export default function UsersListScreen() {
   const { users, loading, error, page, totalPages, setPage } = useFetchUsers();
 
-const fakeStaticUsers: User[] = [
-  { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
-  { id: 2, name: 'Bob Johnson', email: 'bob@example.com' },
-  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com' },
-];
 
-export default function UserListScreen() {
-  const renderItem = ({ item }: { item: User }) => (
+  const renderItem = ({ item }: { item: { name: string; email: string } }) => (
     <View style={styles.userItem}>
       <Text style={styles.userName}>{item.name}</Text>
       <Text style={styles.userEmail}>{item.email}</Text>
@@ -27,6 +21,7 @@ export default function UserListScreen() {
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
+
         <>
           <FlatList
             data={users}
@@ -36,6 +31,7 @@ export default function UserListScreen() {
           />
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>
+
       )}
     </View>
   );
@@ -48,11 +44,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: '#f8f8f8',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  errorText: {
+    color: 'red',
     textAlign: 'center',
-    marginVertical: 20,
   },
   userItem: {
     padding: 15,
